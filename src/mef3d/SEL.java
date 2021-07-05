@@ -37,12 +37,13 @@ public class SEL {
         // TODO: Vector, ¿vector?
         for (int i = 0; i < bs.size(); i++) {
             System.out.println("b del elemento " + (i + 1) + ":");
-            showVector(bs.geti));
+            showVector(bs.get(i));
             System.out.print("*************************************\n");
         }
     }
 
-    float calculateLocalD(int ind, mesh m) {
+    public static float calculateLocalD(int ind, mesh m) {
+        // TODO: mesh, element, node
         float D, a, b, c, d, e, f, g, h, i;
 
         element el = m.getElement(ind);
@@ -68,7 +69,8 @@ public class SEL {
         return D;
     }
 
-    float calculateLocalVolume(int ind, mesh m) {
+    public static float calculateLocalVolume(int ind, mesh m) {
+        // TODO: mesh, element, node
         //Se utiliza la siguiente fórmula:
         //      Dados los 4 puntos vértices del tetrahedro A, B, C, D.
         //      Nos anclamos en A y calculamos los 3 vectores:
@@ -95,31 +97,32 @@ public class SEL {
         h = n4.getY() - n1.getY();
         i = n4.getZ() - n1.getZ();
         //Para el determinante se usa la Regla de Sarrus.
-        V = (1.0 / 6.0) * (a * e * i + d * h * c + g * b * f - g * e * c - a * h * f - d * b * i);
+        V = (1.0f / 6.0f) * (a * e * i + d * h * c + g * b * f - g * e * c - a * h * f - d * b * i);
 
         return V;
     }
 
-    float ab_ij(float ai, float aj, float a1, float bi, float bj, float b1) {
+    public static float ab_ij(float ai, float aj, float a1, float bi, float bj, float b1) {
         return (ai - a1) * (bj - b1) - (aj - a1) * (bi - b1);
     }
 
-    public static void calculateLocalA(int i, Matrix &A, mesh m) {
+    public static void calculateLocalA(int i, Matrix A, mesh m) {
+        // TODO: Matrix, mesh, element, node
         element e = m.getElement(i);
         node n1 = m.getNode(e.getNode1() - 1);
         node n2 = m.getNode(e.getNode2() - 1);
         node n3 = m.getNode(e.getNode3() - 1);
         node n4 = m.getNode(e.getNode4() - 1);
 
-        A.get0).get0) =ab_ij(n3.getY(), n4.getY(), n1.getY(), n3.getZ(), n4.getZ(), n1.getZ());
-        A.get0).get1) =ab_ij(n4.getY(), n2.getY(), n1.getY(), n4.getZ(), n2.getZ(), n1.getZ());
-        A.get0).get2) =ab_ij(n2.getY(), n3.getY(), n1.getY(), n2.getZ(), n3.getZ(), n1.getZ());
-        A.get1).get0) =ab_ij(n4.getX(), n3.getX(), n1.getX(), n4.getZ(), n3.getZ(), n1.getZ());
-        A.get1).get1) =ab_ij(n2.getX(), n4.getX(), n1.getX(), n2.getZ(), n4.getZ(), n1.getZ());
-        A.get1).get2) =ab_ij(n3.getX(), n2.getX(), n1.getX(), n3.getZ(), n2.getZ(), n1.getZ());
-        A.get2).get0) =ab_ij(n3.getX(), n4.getX(), n1.getX(), n3.getY(), n4.getY(), n1.getY());
-        A.get2).get1) =ab_ij(n4.getX(), n2.getX(), n1.getX(), n4.getY(), n2.getY(), n1.getY());
-        A.get2).get2) =ab_ij(n2.getX(), n3.getX(), n1.getX(), n2.getY(), n3.getY(), n1.getY());
+        A.get(0).get(0) = ab_ij(n3.getY(), n4.getY(), n1.getY(), n3.getZ(), n4.getZ(), n1.getZ());
+        A.get(0).get(1) = ab_ij(n4.getY(), n2.getY(), n1.getY(), n4.getZ(), n2.getZ(), n1.getZ());
+        A.get(0).get(2) = ab_ij(n2.getY(), n3.getY(), n1.getY(), n2.getZ(), n3.getZ(), n1.getZ());
+        A.get(1).get(0) = ab_ij(n4.getX(), n3.getX(), n1.getX(), n4.getZ(), n3.getZ(), n1.getZ());
+        A.get(1).get(1) = ab_ij(n2.getX(), n4.getX(), n1.getX(), n2.getZ(), n4.getZ(), n1.getZ());
+        A.get(1).get(2) = ab_ij(n3.getX(), n2.getX(), n1.getX(), n3.getZ(), n2.getZ(), n1.getZ());
+        A.get(2).get(0) = ab_ij(n3.getX(), n4.getX(), n1.getX(), n3.getY(), n4.getY(), n1.getY());
+        A.get(2).get(1) = ab_ij(n4.getX(), n2.getX(), n1.getX(), n4.getY(), n2.getY(), n1.getY());
+        A.get(2).get(2) = ab_ij(n2.getX(), n3.getX(), n1.getX(), n2.getY(), n3.getY(), n1.getY());
     }
 
     public static void calculateB(Matrix B) {
@@ -141,7 +144,7 @@ public class SEL {
     }
 
     public static Matrix createLocalK(int element, mesh m) {
-        // TODO: Matrix, mesh
+        // TODO: Matrix, mesh, parameter
         // K = (k*Ve/D^2)Bt*At*A*B := K_4x4
         float D, Ve, k = m.getParameter(THERMAL_CONDUCTIVITY);
         Matrix K, A, B, Bt, At;
@@ -161,7 +164,7 @@ public class SEL {
         return K;
     }
 
-    float calculateLocalJ(int ind, mesh m) {
+    public static float calculateLocalJ(int ind, mesh m) {
         float J, a, b, c, d, e, f, g, h, i;
 
         // TODO: mesh, element, node
@@ -188,80 +191,87 @@ public class SEL {
         return J;
     }
 
-    Vector createLocalb(int element, mesh &m) {
+    public static Vector createLocalb(int element, mesh m) {
+        // TODO: mesh, parameter
         Vector b;
 
         float Q = m.getParameter(HEAT_SOURCE), J, b_i;
         J = calculateLocalJ(element, m);
 
-        b_i = Q * J / 24.0;
-        b.push_back(b_i);
-        b.push_back(b_i);
-        b.push_back(b_i);
-        b.push_back(b_i);
+        b_i = Q * J / 24.0f;
+        b.push(b_i);
+        b.push(b_i);
+        b.push(b_i);
+        b.push(b_i);
 
         return b;
     }
 
-    public static void crearSistemasLocales(mesh &m, vector<Matrix> &localKs, vector<Vector> &localbs) {
+    public static void crearSistemasLocales(mesh m, vector<Matrix> localKs, vector<Vector> localbs) {
+        // TODO: mesh, Matrix, vector, size
         for (int i = 0; i < m.getSize(ELEMENTS); i++) {
-            localKs.push_back(createLocalK(i, m));
-            localbs.push_back(createLocalb(i, m));
+            localKs.push(createLocalK(i, m));
+            localbs.push(createLocalb(i, m));
         }
     }
 
-    public static void assemblyK(element e, Matrix localK, Matrix &K) {
+    public static void assemblyK(element e, Matrix localK, Matrix K) {
+        // TODO: element, Matrix
         int index1 = e.getNode1() - 1;
         int index2 = e.getNode2() - 1;
         int index3 = e.getNode3() - 1;
         int index4 = e.getNode4() - 1;
 
-        K.getindex1).getindex1) +=localK.get0).get0);
-        K.getindex1).getindex2) +=localK.get0).get1);
-        K.getindex1).getindex3) +=localK.get0).get2);
-        K.getindex1).getindex4) +=localK.get0).get3);
-        K.getindex2).getindex1) +=localK.get1).get0);
-        K.getindex2).getindex2) +=localK.get1).get1);
-        K.getindex2).getindex3) +=localK.get1).get2);
-        K.getindex2).getindex4) +=localK.get1).get3);
-        K.getindex3).getindex1) +=localK.get2).get0);
-        K.getindex3).getindex2) +=localK.get2).get1);
-        K.getindex3).getindex3) +=localK.get2).get2);
-        K.getindex3).getindex4) +=localK.get2).get3);
-        K.getindex4).getindex1) +=localK.get3).get0);
-        K.getindex4).getindex2) +=localK.get3).get1);
-        K.getindex4).getindex3) +=localK.get3).get2);
-        K.getindex4).getindex4) +=localK.get3).get3);
+        K.get(index1).get(index1) += localK.get(0).get(0);
+        K.get(index1).get(index2) += localK.get(0).get(1);
+        K.get(index1).get(index3) += localK.get(0).get(2);
+        K.get(index1).get(index4) += localK.get(0).get(3);
+        K.get(index2).get(index1) += localK.get(1).get(0);
+        K.get(index2).get(index2) += localK.get(1).get(1);
+        K.get(index2).get(index3) += localK.get(1).get(2);
+        K.get(index2).get(index4) += localK.get(1).get(3);
+        K.get(index3).get(index1) += localK.get(2).get(0);
+        K.get(index3).get(index2) += localK.get(2).get(1);
+        K.get(index3).get(index3) += localK.get(2).get(2);
+        K.get(index3).get(index4) += localK.get(2).get(3);
+        K.get(index4).get(index1) += localK.get(3).get(0);
+        K.get(index4).get(index2) += localK.get(3).get(1);
+        K.get(index4).get(index3) += localK.get(3).get(2);
+        K.get(index4).get(index4) += localK.get(3).get(3);
     }
 
-    public static void assemblyb(element e, Vector localb, Vector &b) {
+    public static void assemblyb(element e, Vector localb, Vector b) {
+        // TODO: element, vector
         int index1 = e.getNode1() - 1;
         int index2 = e.getNode2() - 1;
         int index3 = e.getNode3() - 1;
         int index4 = e.getNode4() - 1;
 
-        b.getindex1) +=localb.get0);
-        b.getindex2) +=localb.get1);
-        b.getindex3) +=localb.get2);
-        b.getindex4) +=localb.get3);
+        b.set(index1, b.get(index1) + localb.get(0));
+        b.get(index2) += localb.get(1);
+        b.get(index3) += localb.get(2);
+        b.get(index4) += localb.get(3);
     }
 
-    public static void ensamblaje(mesh &m, vector<Matrix> &localKs, vector<Vector> &localbs, Matrix &K, Vector &b) {
+    public static void ensamblaje(mesh m, vector<Matrix> localKs, vector<Vector> localbs, Matrix K, Vector b) {
+        // TODO: mesh, Matrix, vector, Vector, size, element
         for (int i = 0; i < m.getSize(ELEMENTS); i++) {
             element e = m.getElement(i);
-            assemblyK(e, localKs.geti), K);
-            assemblyb(e, localbs.geti), b);
+            assemblyK(e, localKs.get(i), K);
+            assemblyb(e, localbs.get(i), b);
         }
     }
 
-    public static void applyNeumann(mesh &m, Vector &b) {
+    public static void applyNeumann(mesh m, Vector b) {
+        // TODO: mesh, Vector, sizes, condition
         for (int i = 0; i < m.getSize(NEUMANN); i++) {
             condition c = m.getCondition(i, NEUMANN);
-            b.getc.getNode1() - 1) +=c.getValue();
+            b.get(c.getNode1() - 1) += c.getValue();
         }
     }
 
-    public static void applyDirichlet(mesh &m, Matrix &K, Vector &b) {
+    public static void applyDirichlet(mesh m, Matrix K, Vector b) {
+        // TODO: mesh, Matrix, Vector, sizes, condition
         for (int i = 0; i < m.getSize(DIRICHLET); i++) {
             condition c = m.getCondition(i, DIRICHLET);
             int index = c.getNode1() - 1;
@@ -270,9 +280,9 @@ public class SEL {
             b.erase(b.begin() + index);
 
             for (int row = 0; row < K.size(); row++) {
-                float cell = K.getrow).getindex);
-                K.getrow).erase(K.getrow).begin() + index);
-                b.getrow) +=-1 * c.getValue() * cell;
+                float cell = K.get(row).get(index);
+                K.get(row).erase(K.get(row).begin() + index);
+                b.get(row) += -1 * c.getValue() * cell;
             }
         }
     }
