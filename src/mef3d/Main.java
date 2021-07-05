@@ -1,12 +1,19 @@
 package mef3d;
 
+import mef3d.classes.Mesh;
+
+import java.io.IOException;
 import java.util.*;
 
 public class Main {
 
-    public static void main(String[] args) {
-        String filename;
+    public static void main(String[] args) throws IOException {
 
+        if (args.length == 0){
+            System.exit(0);
+        }
+
+        String filename = args[0];
         ArrayList<ArrayList<ArrayList<Float>>> localKs = new ArrayList<ArrayList<ArrayList<Float>>>();
         ArrayList<ArrayList<Float>> localbs = new ArrayList<ArrayList<Float>>();
         ArrayList<ArrayList<Float>> K = new ArrayList<ArrayList<Float>>();
@@ -21,12 +28,11 @@ public class Main {
         System.out.print("\t- ELEMENTOS TETRAHEDROS\n");
         System.out.print("*********************************************************************************\n\n");
 
-        mesh m = new mesh();
-        leerMallayCondiciones(m, tempRef_filename);
-        filename = tempRef_filename.argValue;
+        Mesh m = new Mesh();
+        Tools.leerMallayCondiciones(m, filename);
         System.out.print("Datos obtenidos correctamente\n********************\n");
 
-        crearSistemasLocales(m, localKs, localbs);
+        SEL.crearSistemasLocales(m, localKs, localbs);
         showKs(new ArrayList<ArrayList<ArrayList<Float>>>(localKs));
         showbs(new ArrayList<ArrayList<Float>>(localbs));
         System.out.print("******************************\n");
@@ -44,7 +50,7 @@ public class Main {
         System.out.print(b.size());
         System.out.print("\n");
 
-        applyNeumann(m, b);
+        SEL.applyNeumann(m, b);
         showMatrix(new ArrayList<ArrayList<Float>>(K));
         showVector(new ArrayList<Float>(b));
         System.out.print("******************************\n");

@@ -1,5 +1,11 @@
 package mef3d;
 
+import mef3d.classes.Element;
+import mef3d.classes.Mesh;
+import mef3d.classes.Node;
+import mef3d.classes.enums.parameters;
+import mef3d.classes.enums.sizes;
+
 import java.util.*;
 
 public class SEL {
@@ -15,8 +21,8 @@ public class SEL {
         }
     }
 
-    public static void showKs(vector<Matrix> Ks) {
-        // TODO: Matrix, ¿vector?
+    public static void showKs(ArrayList<ArrayList<ArrayList<Float>>> Ks) {
+        // TODO: ArrayList<ArrayList<Float>>, ¿vector?
         for (int i = 0; i < Ks.size(); i++) {
             System.out.println("K del elemento " + (i + 1) + ":");
             showMatrix(Ks.get(i));
@@ -24,7 +30,7 @@ public class SEL {
         }
     }
 
-    public static void showVector(Vector b) {
+    public static void showVector(ArrayList<Float> b) {
         // TODO: Vector
         System.out.print("[\t");
         for (int i = 0; i < b.size(); i++) {
@@ -33,7 +39,7 @@ public class SEL {
         System.out.print("]\n");
     }
 
-    public static void showbs(vector<Vector> bs) {
+    public static void showbs(ArrayList<ArrayList<Float>> bs) {
         // TODO: Vector, ¿vector?
         for (int i = 0; i < bs.size(); i++) {
             System.out.println("b del elemento " + (i + 1) + ":");
@@ -42,16 +48,15 @@ public class SEL {
         }
     }
 
-    public static float calculateLocalD(int ind, mesh m) {
-        // TODO: mesh, element, node
+    public static float calculateLocalD(int ind, Mesh m) {
         float D, a, b, c, d, e, f, g, h, i;
 
-        element el = m.getElement(ind);
+        Element el = m.getElement(ind);
 
-        node n1 = m.getNode(el.getNode1() - 1);
-        node n2 = m.getNode(el.getNode2() - 1);
-        node n3 = m.getNode(el.getNode3() - 1);
-        node n4 = m.getNode(el.getNode4() - 1);
+        Node n1 = m.getNode(el.getNode1() - 1);
+        Node n2 = m.getNode(el.getNode2() - 1);
+        Node n3 = m.getNode(el.getNode3() - 1);
+        Node n4 = m.getNode(el.getNode4() - 1);
 
         a = n2.getX() - n1.getX();
         b = n2.getY() - n1.getY();
@@ -69,8 +74,8 @@ public class SEL {
         return D;
     }
 
-    public static float calculateLocalVolume(int ind, mesh m) {
-        // TODO: mesh, element, node
+    public static float calculateLocalVolume(int ind, Mesh m) {
+        // TODO: Mesh, Element, Node
         //Se utiliza la siguiente fórmula:
         //      Dados los 4 puntos vértices del tetrahedro A, B, C, D.
         //      Nos anclamos en A y calculamos los 3 vectores:
@@ -81,11 +86,11 @@ public class SEL {
         //              V = (1/6)*det(  [ V1' ; V2' ; V3' ]  )
 
         float V, a, b, c, d, e, f, g, h, i;
-        element el = m.getElement(ind);
-        node n1 = m.getNode(el.getNode1() - 1);
-        node n2 = m.getNode(el.getNode2() - 1);
-        node n3 = m.getNode(el.getNode3() - 1);
-        node n4 = m.getNode(el.getNode4() - 1);
+        Element el = m.getElement(ind);
+        Node n1 = m.getNode(el.getNode1() - 1);
+        Node n2 = m.getNode(el.getNode2() - 1);
+        Node n3 = m.getNode(el.getNode3() - 1);
+        Node n4 = m.getNode(el.getNode4() - 1);
 
         a = n2.getX() - n1.getX();
         b = n2.getY() - n1.getY();
@@ -106,27 +111,27 @@ public class SEL {
         return (ai - a1) * (bj - b1) - (aj - a1) * (bi - b1);
     }
 
-    public static void calculateLocalA(int i, Matrix A, mesh m) {
-        // TODO: Matrix, mesh, element, node
-        element e = m.getElement(i);
-        node n1 = m.getNode(e.getNode1() - 1);
-        node n2 = m.getNode(e.getNode2() - 1);
-        node n3 = m.getNode(e.getNode3() - 1);
-        node n4 = m.getNode(e.getNode4() - 1);
+    public static void calculateLocalA(int i, ArrayList<ArrayList<Float>> A, Mesh m) {
+        // TODO: ArrayList<ArrayList<Float>>, Mesh, Element, Node
+        Element e = m.getElement(i);
+        Node n1 = m.getNode(e.getNode1() - 1);
+        Node n2 = m.getNode(e.getNode2() - 1);
+        Node n3 = m.getNode(e.getNode3() - 1);
+        Node n4 = m.getNode(e.getNode4() - 1);
 
-        A.get(0).get(0) = ab_ij(n3.getY(), n4.getY(), n1.getY(), n3.getZ(), n4.getZ(), n1.getZ());
-        A.get(0).get(1) = ab_ij(n4.getY(), n2.getY(), n1.getY(), n4.getZ(), n2.getZ(), n1.getZ());
-        A.get(0).get(2) = ab_ij(n2.getY(), n3.getY(), n1.getY(), n2.getZ(), n3.getZ(), n1.getZ());
-        A.get(1).get(0) = ab_ij(n4.getX(), n3.getX(), n1.getX(), n4.getZ(), n3.getZ(), n1.getZ());
-        A.get(1).get(1) = ab_ij(n2.getX(), n4.getX(), n1.getX(), n2.getZ(), n4.getZ(), n1.getZ());
-        A.get(1).get(2) = ab_ij(n3.getX(), n2.getX(), n1.getX(), n3.getZ(), n2.getZ(), n1.getZ());
-        A.get(2).get(0) = ab_ij(n3.getX(), n4.getX(), n1.getX(), n3.getY(), n4.getY(), n1.getY());
-        A.get(2).get(1) = ab_ij(n4.getX(), n2.getX(), n1.getX(), n4.getY(), n2.getY(), n1.getY());
-        A.get(2).get(2) = ab_ij(n2.getX(), n3.getX(), n1.getX(), n2.getY(), n3.getY(), n1.getY());
+        A.get(0).set(0, ab_ij(n3.getY(), n4.getY(), n1.getY(), n3.getZ(), n4.getZ(), n1.getZ()));
+        A.get(0).set(1, ab_ij(n4.getY(), n2.getY(), n1.getY(), n4.getZ(), n2.getZ(), n1.getZ()));
+        A.get(0).set(2) = ab_ij(n2.getY(), n3.getY(), n1.getY(), n2.getZ(), n3.getZ(), n1.getZ());
+        A.get(1).set(0) = ab_ij(n4.getX(), n3.getX(), n1.getX(), n4.getZ(), n3.getZ(), n1.getZ());
+        A.get(1).set(1) = ab_ij(n2.getX(), n4.getX(), n1.getX(), n2.getZ(), n4.getZ(), n1.getZ());
+        A.get(1).set(2) = ab_ij(n3.getX(), n2.getX(), n1.getX(), n3.getZ(), n2.getZ(), n1.getZ());
+        A.get(2).set(0) = ab_ij(n3.getX(), n4.getX(), n1.getX(), n3.getY(), n4.getY(), n1.getY());
+        A.get(2).set(1) = ab_ij(n4.getX(), n2.getX(), n1.getX(), n4.getY(), n2.getY(), n1.getY());
+        A.get(2).set(2) = ab_ij(n2.getX(), n3.getX(), n1.getX(), n2.getY(), n3.getY(), n1.getY());
     }
 
-    public static void calculateB(Matrix B) {
-        // TODO: Matrix
+    public static void calculateB(ArrayList<ArrayList<Float>> B) {
+        // TODO: ArrayList<ArrayList<Float>>
         B.get(0).get(0) = -1;
         B.get(0).get(1) = 1;
         B.get(0).get(2) = 0;
@@ -143,18 +148,24 @@ public class SEL {
         B.get(2).get(3) = 1;
     }
 
-    public static Matrix createLocalK(int element, mesh m) {
-        // TODO: Matrix, mesh, parameter
+    public static ArrayList<ArrayList<Float>> createLocalK(int Element, Mesh m) {
+        // TODO: ArrayList<ArrayList<Float>>, Mesh, parameter
         // K = (k*Ve/D^2)Bt*At*A*B := K_4x4
-        float D, Ve, k = m.getParameter(THERMAL_CONDUCTIVITY);
-        Matrix K, A, B, Bt, At;
+        float D, Ve, k = m.getParameter(parameters.THERMAL_CONDUCTIVITY);
+        ArrayList<ArrayList<Float>> K, A, B, Bt, At;
 
-        D = calculateLocalD(element, m);
-        Ve = calculateLocalVolume(element, m);
+        K = new ArrayList<>();
+        A = new ArrayList<>();
+        B = new ArrayList<>();
+        Bt = new ArrayList<>();
+        At = new ArrayList<>();
+
+        D = calculateLocalD(Element, m);
+        Ve = calculateLocalVolume(Element, m);
 
         MathTools.zeroes(A, 3);
         MathTools.zeroes(B, 3, 4);
-        calculateLocalA(element, A, m);
+        calculateLocalA(Element, A, m);
         calculateB(B);
         MathTools.transpose(A, At);
         MathTools.transpose(B, Bt);
@@ -164,16 +175,16 @@ public class SEL {
         return K;
     }
 
-    public static float calculateLocalJ(int ind, mesh m) {
+    public static float calculateLocalJ(int ind, Mesh m) {
         float J, a, b, c, d, e, f, g, h, i;
 
-        // TODO: mesh, element, node
-        element el = m.getElement(ind);
+        // TODO: Mesh, Element, Node
+        Element el = m.getElement(ind);
 
-        node n1 = m.getNode(el.getNode1() - 1);
-        node n2 = m.getNode(el.getNode2() - 1);
-        node n3 = m.getNode(el.getNode3() - 1);
-        node n4 = m.getNode(el.getNode4() - 1);
+        Node n1 = m.getNode(el.getNode1() - 1);
+        Node n2 = m.getNode(el.getNode2() - 1);
+        Node n3 = m.getNode(el.getNode3() - 1);
+        Node n4 = m.getNode(el.getNode4() - 1);
 
         a = n2.getX() - n1.getX();
         b = n3.getX() - n1.getX();
@@ -191,12 +202,12 @@ public class SEL {
         return J;
     }
 
-    public static Vector createLocalb(int element, mesh m) {
-        // TODO: mesh, parameter
+    public static Vector createLocalb(int Element, Mesh m) {
+        // TODO: Mesh, parameter
         Vector b;
 
         float Q = m.getParameter(HEAT_SOURCE), J, b_i;
-        J = calculateLocalJ(element, m);
+        J = calculateLocalJ(Element, m);
 
         b_i = Q * J / 24.0f;
         b.push(b_i);
@@ -207,16 +218,16 @@ public class SEL {
         return b;
     }
 
-    public static void crearSistemasLocales(mesh m, vector<Matrix> localKs, vector<Vector> localbs) {
-        // TODO: mesh, Matrix, vector, size
-        for (int i = 0; i < m.getSize(ELEMENTS); i++) {
-            localKs.push(createLocalK(i, m));
-            localbs.push(createLocalb(i, m));
+    public static void crearSistemasLocales(Mesh m, ArrayList<ArrayList<ArrayList<Float>>> localKs, ArrayList<ArrayList<Float>> localbs) {
+        // TODO: Mesh, ArrayList<ArrayList<Float>>, vector, size
+        for (int i = 0; i < m.getSize(sizes.ELEMENTS); i++) {
+            localKs.add(createLocalK(i, m));
+            localbs.add(createLocalb(i, m));
         }
     }
 
-    public static void assemblyK(element e, Matrix localK, Matrix K) {
-        // TODO: element, Matrix
+    public static void assemblyK(Element e, ArrayList<ArrayList<Float>> localK, ArrayList<ArrayList<Float>> K) {
+        // TODO: Element, ArrayList<ArrayList<Float>>
         int index1 = e.getNode1() - 1;
         int index2 = e.getNode2() - 1;
         int index3 = e.getNode3() - 1;
@@ -240,8 +251,8 @@ public class SEL {
         K.get(index4).get(index4) += localK.get(3).get(3);
     }
 
-    public static void assemblyb(element e, Vector localb, Vector b) {
-        // TODO: element, vector
+    public static void assemblyb(Element e, Vector localb, Vector b) {
+        // TODO: Element, vector
         int index1 = e.getNode1() - 1;
         int index2 = e.getNode2() - 1;
         int index3 = e.getNode3() - 1;
@@ -253,25 +264,25 @@ public class SEL {
         b.get(index4) += localb.get(3);
     }
 
-    public static void ensamblaje(mesh m, vector<Matrix> localKs, vector<Vector> localbs, Matrix K, Vector b) {
-        // TODO: mesh, Matrix, vector, Vector, size, element
+    public static void ensamblaje(Mesh m, vector<ArrayList<ArrayList<Float>>> localKs, vector<Vector> localbs, ArrayList<ArrayList<Float>> K, Vector b) {
+        // TODO: Mesh, ArrayList<ArrayList<Float>>, vector, Vector, size, Element
         for (int i = 0; i < m.getSize(ELEMENTS); i++) {
-            element e = m.getElement(i);
+            Element e = m.getElement(i);
             assemblyK(e, localKs.get(i), K);
             assemblyb(e, localbs.get(i), b);
         }
     }
 
-    public static void applyNeumann(mesh m, Vector b) {
-        // TODO: mesh, Vector, sizes, condition
+    public static void applyNeumann(Mesh m, Vector b) {
+        // TODO: Mesh, Vector, sizes, condition
         for (int i = 0; i < m.getSize(NEUMANN); i++) {
             condition c = m.getCondition(i, NEUMANN);
             b.get(c.getNode1() - 1) += c.getValue();
         }
     }
 
-    public static void applyDirichlet(mesh m, Matrix K, Vector b) {
-        // TODO: mesh, Matrix, Vector, sizes, condition
+    public static void applyDirichlet(Mesh m, ArrayList<ArrayList<Float>> K, Vector b) {
+        // TODO: Mesh, ArrayList<ArrayList<Float>>, Vector, sizes, condition
         for (int i = 0; i < m.getSize(DIRICHLET); i++) {
             condition c = m.getCondition(i, DIRICHLET);
             int index = c.getNode1() - 1;
@@ -287,13 +298,13 @@ public class SEL {
         }
     }
 
-    public static void calculate(Matrix K, Vector b, Vector T) {
+    public static void calculate(ArrayList<ArrayList<Float>> K, Vector b, Vector T) {
         System.out.println("Iniciando calculo de respuesta...");
-        // TODO: Matrix
-        Matrix Kinv;
+        // TODO: ArrayList<ArrayList<Float>>
+        ArrayList<ArrayList<Float>> Kinv;
         System.out.println("Calculo de inversa...");
-        MathTools.inverseMatrix(K, Kinv);
+        MathTools.inverseArrayList<ArrayList<Float>>(K, Kinv);
         System.out.println("Calculo de respuesta...");
-        MathTools.productMatrixVector(Kinv, b, T);
+        MathTools.productArrayList<ArrayList<Float>>Vector(Kinv, b, T);
     }
 }

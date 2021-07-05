@@ -1,4 +1,7 @@
+package mef3d;
+
 import classes.Item;
+import mef3d.classes.Mesh;
 import mef3d.classes.enums.indicators;
 import mef3d.classes.enums.lines;
 import mef3d.classes.enums.modes;
@@ -85,37 +88,22 @@ public class Tools {
         }
     }
 
-    public static void addExtension(String newfilename, String filename, String extension){
-        int ori_length = newfilename.length();
-        int ext_length = extension.length();
-
-        StringBuilder newFileName = new StringBuilder(newfilename);
-        int i;
-
-        for (i = 0; i < ori_length; i++){
-            newFileName.setCharAt(i, filename.charAt(i));
-
-        for (i = 0; i < ext_length; i++)
-            newFileName.setCharAt(ori_length + i, extension.charAt(i));
-
-        newFileName.setCharAt(ori_length + i, '\0') ;
-        }
+    public static String addExtension(String filename, String extension){
+        return filename + extension;
     }
 
     public static void leerMallayCondiciones(Mesh m, String filename) throws IOException {
-        String inputFileName = "";
+        String inputFileName = addExtension(filename, ".dat");;
 
         float k, Q;
 
         int nnodes, neltos, ndirich, nneu;
 
-        addExtension(inputFileName, filename, ".dat");
-
         FileReader file = new FileReader(inputFileName);
 
-        // file >> k >> Q;
+        file >> k >> Q;
         //cout << "k y Q: "<<k<<" y "<<Q<<"\n";
-        // file >> nnodes >> neltos >> ndirich >> nneu;
+        file >> nnodes >> neltos >> ndirich >> nneu;
         //cout << "sizes: "<<nnodes<<" y "<<neltos<<" y "<<ndirich<<" y "<<nneu<<"\n";
 
         m.setParameters(k, Q);

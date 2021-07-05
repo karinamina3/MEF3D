@@ -22,10 +22,18 @@ public class Mesh {
     }
 
     public void setSizes(int nnodes, int neltos,int ndirich,int nneu) {
-        size[Integer.parseInt(sizes.NODES.toString())] = nnodes;
-        size[Integer.parseInt(sizes.ELEMENTS.toString())] = neltos;
-        size[Integer.parseInt(sizes.DIRICHLET.toString())] = ndirich;
-        size[Integer.parseInt(sizes.NEUMANN.toString())] = nneu;
+        size[sizes.NODES] = nnodes;
+        size[sizes.ELEMENTS] = neltos;
+        size[sizes.DIRICHLET] = ndirich;
+        size[sizes.NEUMANN] = nneu;
+    }
+
+    public int getSize(int s){
+        return size[s];
+    }
+
+    public float getParameter(int p){
+        return parameter[p];
     }
 
     public ArrayList<Node> getNodes(){
