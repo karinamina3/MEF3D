@@ -1,8 +1,9 @@
 import classes.Item;
-import classes.enums.indicators;
-import classes.enums.modes;
-import classes.enums.lines;
-import classes.enums.sizes;
+import mef3d.classes.enums.indicators;
+import mef3d.classes.enums.lines;
+import mef3d.classes.enums.modes;
+import mef3d.classes.enums.sizes;
+
 
 import java.io.*;
 import java.util.ArrayList;
@@ -121,7 +122,7 @@ public class Tools {
         m.setSizes(nnodes,neltos,ndirich,nneu);
         m.createData();
 
-        obtenerDatos(file,lines.SINGLELINE,nnodes,modes.INT_FLOAT_FLOAT_FLOAT,m.getNodes());
+        obtenerDatos(file, lines.SINGLELINE,nnodes, modes.INT_FLOAT_FLOAT_FLOAT,m.getNodes());
         obtenerDatos(file,lines.DOUBLELINE,neltos,modes.INT_INT_INT_INT_INT,m.getElements());
         obtenerDatos(file,lines.DOUBLELINE,ndirich,modes.INT_FLOAT,m.getDirichlet());
         obtenerDatos(file,lines.DOUBLELINE,nneu,modes.INT_FLOAT,m.getNeumann());

@@ -85,6 +85,8 @@ public class Item {
     }
 
     // TODO: equivalent of virtual functions in Java
-    // virtual void setValues(int a,float b,float c,float d,int e,int f,int g, int h, float i)=0;
+    public void setValues(int a,float b,float c,float d,int e,int f,int g, int h, float i){
+
+    };
 
 }
