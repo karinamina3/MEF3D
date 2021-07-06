@@ -7,6 +7,9 @@ public class MathTools {
     public static void zeroes(ArrayList<ArrayList<Float>> M, int n, int m) {
         for (int i = 0; i < n; i++) {
             ArrayList<Float> row = new ArrayList<>(m);
+            for (int j = 0; j < m; j++){
+                row.add(0.0F);
+            }
             M.add(row);
         }
     }
@@ -14,6 +17,9 @@ public class MathTools {
     public static void zeroesAux(ArrayList<ArrayList<Float>> M, int n) {
         for (int i = 0; i < n; i++) {
             ArrayList<Float> row = new ArrayList<Float>(n);
+            for (int j = 0; j < n; j++) {
+                row.add(0.0F);
+            }
             M.add(row);
         }
     }
@@ -76,8 +82,10 @@ public class MathTools {
     public static void getMinor(ArrayList<ArrayList<Float>> M, int i, int j) {
         //System.out.print("Calculando menor ("<<i+1<<","<<j+1<<")...\n");
         M.remove(i);
-        for (int index = 0; index < M.size(); index++) {
-            M.get(i).remove(j);
+        int mSize = M.size();
+
+        for (int index = 0; index < mSize; index++) {
+            M.get(index).remove(j);
         }
     }
 

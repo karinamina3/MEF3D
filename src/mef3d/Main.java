@@ -34,11 +34,13 @@ public class Main {
         System.out.print("Datos obtenidos correctamente\n********************\n");
 
         SEL.crearSistemasLocales(m, localKs, localbs);
+
         SEL.showKs(new ArrayList<ArrayList<ArrayList<Float>>>(localKs));
         SEL.showbs(new ArrayList<ArrayList<Float>>(localbs));
         System.out.print("******************************\n");
 
         MathTools.zeroesAux(K, m.getSize(sizes.NODES));
+
         MathTools.zeroes(b, m.getSize(sizes.NODES));
         SEL.ensamblaje(m, localKs, localbs, K, b);
         SEL.showMatrix(new ArrayList<ArrayList<Float>>(K));

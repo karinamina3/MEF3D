@@ -18,7 +18,9 @@ import java.util.Scanner;
 public class Tools {
 
     public static void obtenerDatosCoordenadas(Scanner sc, int n, ArrayList<Node> node_list) {
-        for (int i = 0; i < n; i++){
+
+        for (int i = 0; i < n; i++) {
+            Node node = new Node();
             int e;
             float r, rr, rrr;
 
@@ -27,8 +29,7 @@ public class Tools {
             rr = sc.nextFloat();
             rrr = sc.nextFloat();
 
-            node_list.get(i).setValues(
-                    e,
+            node.setValues(e,
                     r,
                     rr,
                     rrr,
@@ -36,13 +37,15 @@ public class Tools {
                     indicators.NOTHING,
                     indicators.NOTHING,
                     indicators.NOTHING,
-                    indicators.NOTHING
-            );
+                    indicators.NOTHING);
+
+            node_list.add(node);
         }
     }
 
     public static void obtenerDatosElementos(Scanner sc, int n, ArrayList<Element> element_list) {
-        for (int i = 0; i < n; i++){
+        for (int i = 0; i < n; i++) {
+            Element el = new Element();
             int e1, e2, e3, e4, e5;
 
             e1 = sc.nextInt();
@@ -51,7 +54,7 @@ public class Tools {
             e4 = sc.nextInt();
             e5 = sc.nextInt();
 
-            element_list.get(i).setValues(
+            el.setValues(
                     e1,
                     indicators.NOTHING,
                     indicators.NOTHING,
@@ -62,17 +65,21 @@ public class Tools {
                     e5,
                     indicators.NOTHING
             );
+
+            element_list.add(el);
         }
     }
+
     public static void obtenerDatosCondiciones(Scanner sc, int n, ArrayList<Condition> condition_list) {
-        for (int i = 0; i < n; i++){
+        for (int i = 0; i < n; i++) {
+            Condition cond = new Condition();
             int e0;
             float r0;
 
             e0 = sc.nextInt();
             r0 = sc.nextFloat();
 
-            condition_list.get(i).setValues(
+            cond.setValues(
                     indicators.NOTHING,
                     indicators.NOTHING,
                     indicators.NOTHING,
@@ -83,16 +90,18 @@ public class Tools {
                     indicators.NOTHING,
                     r0
             );
+
+            condition_list.add(cond);
         }
     }
 
-    public static void correctConditions(int n, ArrayList<Condition> list, ArrayList<Integer> indices){
+    public static void correctConditions(int n, ArrayList<Condition> list, ArrayList<Integer> indices) {
         for (int i = 0; i < n; i++)
-            indices.set(i, list.get(i).getNode1());
+            indices.add(list.get(i).getNode1());
 
-        for (int i = 0; i < n-1; i++){
+        for (int i = 0; i < n - 1; i++) {
             int pivot = list.get(i).getNode1();
-            for (int j = i; j < n; j++){
+            for (int j = i; j < n; j++) {
                 // Si la condición actual corresponde a un nodo posterior al nodo eliminado por
                 // aplicar la condición anterior, se debe actualizar su posición.
                 if (list.get(j).getNode1() > pivot) list.get(j).setNode1(list.get(j).getNode1() - 1);
@@ -100,7 +109,7 @@ public class Tools {
         }
     }
 
-    public static String addExtension(String filename, String extension){
+    public static String addExtension(String filename, String extension) {
         return filename + extension;
     }
 
@@ -122,23 +131,45 @@ public class Tools {
         ndirich = sc.nextInt();
         nneu = sc.nextInt();
 
+        System.out.println(nnodes);
+        System.out.println(neltos);
+        System.out.println(ndirich);
+        System.out.println(nneu);
+
         m.setParameters(k, Q);
-        m.setSizes(nnodes,neltos,ndirich,nneu);
+        m.setSizes(nnodes, neltos, ndirich, nneu);
         m.createData();
 
+        sc.next();
+
         obtenerDatosCoordenadas(sc, nnodes, m.getNodes());
-        obtenerDatosElementos(sc,neltos, m.getElements());
-        obtenerDatosCondiciones(sc,ndirich, m.getDirichlet());
-        obtenerDatosCondiciones(sc,nneu, m.getNeumann());
+
+        sc.next();
+        sc.nextLine();
+        sc.next();
+
+        obtenerDatosElementos(sc, neltos, m.getElements());
+
+        sc.next();
+        sc.nextLine();
+        sc.next();
+
+        obtenerDatosCondiciones(sc, ndirich, m.getDirichlet());
+
+        sc.next();
+        sc.nextLine();
+        sc.next();
+
+        obtenerDatosCondiciones(sc, nneu, m.getNeumann());
 
         sc.close();
         //Se corrigen los índices en base a las filas que serán eliminadas
         //luego de aplicar las condiciones de Dirichlet
-        correctConditions(ndirich,m.getDirichlet(),m.getDirichletIndices());
+        correctConditions(ndirich, m.getDirichlet(), m.getDirichletIndices());
     }
 
-    public static boolean findIndex(int v, int s, ArrayList<Integer> arr){
-        for (int i = 0; i < s; i++){
+    public static boolean findIndex(int v, int s, ArrayList<Integer> arr) {
+        for (int i = 0; i < s; i++) {
             if (arr.get(i) == v) return true;
         }
 
@@ -162,12 +193,12 @@ public class Tools {
         int n = m.getSize(sizes.NODES);
         int nd = m.getSize(sizes.DIRICHLET);
 
-        for (int i = 0; i < n; i++){
-            if (findIndex(i+1, nd, dirich_indices)){
-                out.write("" + i+1 + " " + dirich.get(Dpos).getValue() + "\n");
+        for (int i = 0; i < n; i++) {
+            if (findIndex(i + 1, nd, dirich_indices)) {
+                out.write("" + i + 1 + " " + dirich.get(Dpos).getValue() + "\n");
                 Dpos++;
             } else {
-                out.write("" + i+1 + " " + T.get(Tpos) + "\n");
+                out.write("" + i + 1 + " " + T.get(Tpos) + "\n");
                 Tpos++;
             }
         }

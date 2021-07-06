@@ -12,6 +12,9 @@ import java.util.*;
 public class SEL {
 
     public static void showMatrix(ArrayList<ArrayList<Float>> K) {
+        System.out.println(K.get(0).size());
+        System.out.println(K.size());
+
         for (int i = 0; i < K.get(0).size(); i++) {
             System.out.print("[\t");
             for (int j = 0; j < K.size(); j++) {
@@ -205,10 +208,13 @@ public class SEL {
     }
 
     public static void crearSistemasLocales(Mesh m, ArrayList<ArrayList<ArrayList<Float>>> localKs, ArrayList<ArrayList<Float>> localbs) {
+        System.out.println(m.getSize(sizes.ELEMENTS));
+
         for (int i = 0; i < m.getSize(sizes.ELEMENTS); i++) {
             localKs.add(createLocalK(i, m));
             localbs.add(createLocalb(i, m));
         }
+        System.out.println("Local KS antes" + localKs);
     }
 
     public static void assemblyK(Element e, ArrayList<ArrayList<Float>> localK, ArrayList<ArrayList<Float>> K) {
