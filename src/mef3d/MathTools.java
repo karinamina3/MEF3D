@@ -4,16 +4,16 @@ import java.util.*;
 
 public class MathTools {
 
-    public static void zeroes(ArrayList<ArrayList<Float>> M, int n) {
+    public static void zeroes(ArrayList<ArrayList<Float>> M, int n, int m) {
         for (int i = 0; i < n; i++) {
-            ArrayList<Float> row = new ArrayList<Float>(n);
+            ArrayList<Float> row = new ArrayList<>(m);
             M.add(row);
         }
     }
 
-    public static void zeroes(ArrayList<ArrayList<Float>> M, int n, int m) {
+    public static void zeroesAux(ArrayList<ArrayList<Float>> M, int n) {
         for (int i = 0; i < n; i++) {
-            ArrayList<Float> row = new ArrayList<Float>(m);
+            ArrayList<Float> row = new ArrayList<Float>(n);
             M.add(row);
         }
     }
@@ -25,10 +25,10 @@ public class MathTools {
     }
 
     public static void copyMatrix(ArrayList<ArrayList<Float>> A, ArrayList<ArrayList<Float>> copy) {
-        zeroes(copy, A.size());
+        zeroesAux(copy, A.size());
         for (int i = 0; i < A.size(); i++) {
             for (int j = 0; j < A.get(0).size(); j++) {
-                copy.get(i).get(j) = A.get(i).get(j);
+                copy.get(i).set(j, A.get(i).get(j));
             }
         }
     }
@@ -47,7 +47,7 @@ public class MathTools {
         zeroes(R, n, m);
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
-                R.get(i).get(j) = calculateMember(i, j, r, new ArrayList<ArrayList<Float>>(A), new ArrayList<ArrayList<Float>>(B));
+                R.get(i).set(j, calculateMember(i, j, r, new ArrayList<ArrayList<Float>>(A), new ArrayList<ArrayList<Float>>(B)));
             }
         }
 
@@ -60,15 +60,15 @@ public class MathTools {
             for (int c = 0; c < v.size(); c++) {
                 cell += A.get(f).get(c) * v.get(c);
             }
-            R.get(f) += cell;
+            R.set(f, R.get(f) + cell);
         }
     }
 
     public static void productRealMatrix(float real, ArrayList<ArrayList<Float>> M, ArrayList<ArrayList<Float>> R) {
-        zeroes(R, M.size());
+        zeroesAux(R, M.size());
         for (int i = 0; i < M.size(); i++) {
             for (int j = 0; j < M.get(0).size(); j++) {
-                R.get(i).get(j) = real * M.get(i).get(j);
+                R.get(i).set(j, real * M.get(i).get(j));
             }
         }
     }
@@ -76,8 +76,8 @@ public class MathTools {
     public static void getMinor(ArrayList<ArrayList<Float>> M, int i, int j) {
         //System.out.print("Calculando menor ("<<i+1<<","<<j+1<<")...\n");
         M.remove(i);
-        for (int i = 0; i < M.size(); i++) {
-            M.get(i).erase(M.get(i).iterator() + j);
+        for (int index = 0; index < M.size(); index++) {
+            M.get(i).remove(j);
         }
     }
 
@@ -97,14 +97,14 @@ public class MathTools {
     }
 
     public static void cofactors(ArrayList<ArrayList<Float>> M, ArrayList<ArrayList<Float>> Cof) {
-        zeroes(Cof, M.size());
+        zeroesAux(Cof, M.size());
         for (int i = 0; i < M.size(); i++) {
             for (int j = 0; j < M.get(0).size(); j++) {
                 //System.out.print("Calculando cofactor ("<<i+1<<","<<j+1<<")...\n");
                 ArrayList<ArrayList<Float>> minor = new ArrayList<ArrayList<Float>>();
                 copyMatrix(new ArrayList<ArrayList<Float>>(M), minor);
                 getMinor(minor, i, j);
-                Cof.get(i).get(j) = Math.pow(-1, i + j) * determinant(new ArrayList<ArrayList<Float>>(minor));
+                Cof.get(i).set(j, (float) (Math.pow(-1, i + j) * determinant(new ArrayList<ArrayList<Float>>(minor))));
             }
         }
     }
@@ -113,7 +113,7 @@ public class MathTools {
         zeroes(T, M.get(0).size(), M.size());
         for (int i = 0; i < M.size(); i++) {
             for (int j = 0; j < M.get(0).size(); j++) {
-                T.get(j).get(i) = M.get(i).get(j);
+                T.get(j).set(i, M.get(i).get(j));
             }
         }
     }

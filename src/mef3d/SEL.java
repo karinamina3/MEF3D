@@ -163,7 +163,7 @@ public class SEL {
         D = calculateLocalD(Element, m);
         Ve = calculateLocalVolume(Element, m);
 
-        MathTools.zeroes(A, 3);
+        MathTools.zeroesAux(A, 3);
         MathTools.zeroes(B, 3, 4);
         calculateLocalA(Element, A, m);
         calculateB(B);
