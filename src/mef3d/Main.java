@@ -1,6 +1,7 @@
 package mef3d;
 
 import mef3d.classes.Mesh;
+import mef3d.classes.enums.sizes;
 
 import java.io.IOException;
 import java.util.*;
@@ -9,7 +10,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 
-        if (args.length == 0){
+        if (args.length == 0) {
             System.exit(0);
         }
 
@@ -33,15 +34,15 @@ public class Main {
         System.out.print("Datos obtenidos correctamente\n********************\n");
 
         SEL.crearSistemasLocales(m, localKs, localbs);
-        showKs(new ArrayList<ArrayList<ArrayList<Float>>>(localKs));
-        showbs(new ArrayList<ArrayList<Float>>(localbs));
+        SEL.showKs(new ArrayList<ArrayList<ArrayList<Float>>>(localKs));
+        SEL.showbs(new ArrayList<ArrayList<Float>>(localbs));
         System.out.print("******************************\n");
 
-        zeroes(K, m.getSize(sizes.NODES.getValue()));
-        zeroes(b, m.getSize(sizes.NODES.getValue()));
-        ensamblaje(m, localKs, localbs, K, b);
-        showMatrix(new ArrayList<ArrayList<Float>>(K));
-        showVector(new ArrayList<Float>(b));
+        MathTools.zeroes(K, m.getSize(sizes.NODES));
+        MathTools.zeroes(b, m.getSize(sizes.NODES));
+        SEL.ensamblaje(m, localKs, localbs, K, b);
+        SEL.showMatrix(new ArrayList<ArrayList<Float>>(K));
+        SEL.showVector(new ArrayList<Float>(b));
         System.out.print("******************************\n");
         System.out.print(K.size());
         System.out.print(" - ");
@@ -51,8 +52,8 @@ public class Main {
         System.out.print("\n");
 
         SEL.applyNeumann(m, b);
-        showMatrix(new ArrayList<ArrayList<Float>>(K));
-        showVector(new ArrayList<Float>(b));
+        SEL.showMatrix(new ArrayList<>(K));
+        SEL.showVector(new ArrayList<>(b));
         System.out.print("******************************\n");
         System.out.print(K.size());
         System.out.print(" - ");
@@ -61,9 +62,9 @@ public class Main {
         System.out.print(b.size());
         System.out.print("\n");
 
-        applyDirichlet(m, K, b);
-        showMatrix(new ArrayList<ArrayList<Float>>(K));
-        showVector(new ArrayList<Float>(b));
+        SEL.applyDirichlet(m, K, b);
+        SEL.showMatrix(new ArrayList<>(K));
+        SEL.showVector(new ArrayList<>(b));
         System.out.print("******************************\n");
         System.out.print(K.size());
         System.out.print(" - ");
@@ -72,14 +73,13 @@ public class Main {
         System.out.print(b.size());
         System.out.print("\n");
 
-        zeroes(T, b.size());
-        calculate(K, b, T);
+        MathTools.zeroes(T, b.size());
+        SEL.calculate(K, b, T);
 
         System.out.print("La respuesta es: \n");
-        showVector(new ArrayList<Float>(T));
+        SEL.showVector(new ArrayList<Float>(T));
 
-        writeResults(new mesh(m), new ArrayList<Float>(T), filename);
-
+        Tools.writeResults(m, new ArrayList<Float>(T), filename);
     }
 
 }
