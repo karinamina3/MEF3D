@@ -1,6 +1,7 @@
 package mef3d;
 
 import classes.Item;
+import mef3d.classes.Condition;
 import mef3d.classes.Mesh;
 import mef3d.classes.enums.indicators;
 import mef3d.classes.enums.lines;
@@ -129,13 +130,11 @@ public class Tools {
         return false;
     }
 
-    public static void writeResults(Mesh m, Vector T, String filename) throws IOException {
-        String outputFileName = "";
+    public static void writeResults(Mesh m, ArrayList<Float> T, String filename) throws IOException {
+        String outputFileName = addExtension(filename, ".post.res");
 
         ArrayList<Integer> dirich_indices = m.getDirichletIndices();
-        Condition dirich = m.getDirichlet();
-
-        addExtension(outputFileName, filename, ".post.res");
+        ArrayList<Condition> dirich = m.getDirichlet();
 
         FileReader file = new FileReader(outputFileName);
 
