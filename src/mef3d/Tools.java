@@ -75,16 +75,16 @@ public class Tools {
         }
     }
 
-    public static void correctConditions(int n, Condition [] list, int [] indices){
+    public static void correctConditions(int n, ArrayList<Condition> list, ArrayList<Integer> indices){
         for (int i = 0; i < n; i++)
-            indices[i] = list[i].getNode1();
+            indices.set(i, list.get(i).getNode1());
 
         for (int i = 0; i < n-1; i++){
-            int pivot = list[i].getNode1();
+            int pivot = list.get(i).getNode1();
             for (int j = i; j < n; j++){
                 // Si la condición actual corresponde a un nodo posterior al nodo eliminado por
                 // aplicar la condición anterior, se debe actualizar su posición.
-                if (list[j].getNode1() > pivot) list[j].setNode1(list[j].getNode1() - 1);
+                if (list.get(j).getNode1() > pivot) list.get(j).setNode1(list.get(j).getNode1() - 1);
             }
         }
     }
@@ -102,9 +102,9 @@ public class Tools {
 
         FileReader file = new FileReader(inputFileName);
 
-        file >> k >> Q;
+        //file >> k >> Q;
         //cout << "k y Q: "<<k<<" y "<<Q<<"\n";
-        file >> nnodes >> neltos >> ndirich >> nneu;
+        //file >> nnodes >> neltos >> ndirich >> nneu;
         //cout << "sizes: "<<nnodes<<" y "<<neltos<<" y "<<ndirich<<" y "<<nneu<<"\n";
 
         m.setParameters(k, Q);

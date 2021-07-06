@@ -38,7 +38,7 @@ public class Main {
         SEL.showbs(new ArrayList<ArrayList<Float>>(localbs));
         System.out.print("******************************\n");
 
-        MathTools.zeroes(K, m.getSize(sizes.NODES));
+        MathTools.zeroesAux(K, m.getSize(sizes.NODES));
         MathTools.zeroes(b, m.getSize(sizes.NODES));
         SEL.ensamblaje(m, localKs, localbs, K, b);
         SEL.showMatrix(new ArrayList<ArrayList<Float>>(K));

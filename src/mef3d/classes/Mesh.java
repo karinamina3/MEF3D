@@ -17,8 +17,8 @@ public class Mesh {
     ArrayList<Condition> neumann_list;
 
     public void setParameters(float k, float Q){
-        parameter[Integer.parseInt(parameters.THERMAL_CONDUCTIVITY.toString())] = k;
-        parameter[Integer.parseInt(parameters.HEAT_SOURCE.toString())] = Q;
+        parameter[parameters.THERMAL_CONDUCTIVITY] = k;
+        parameter[parameters.HEAT_SOURCE] = Q;
     }
 
     public void setSizes(int nnodes, int neltos,int ndirich,int nneu) {
@@ -34,6 +34,14 @@ public class Mesh {
 
     public float getParameter(int p){
         return parameter[p];
+    }
+
+    public void createData(){
+        node_list = new ArrayList<>(size[sizes.NODES]);
+        element_list = new ArrayList<>(size[sizes.ELEMENTS]);
+        indices_dirich = new ArrayList<>(size[sizes.DIRICHLET]);
+        dirichlet_list = new ArrayList<>(size[sizes.DIRICHLET]);
+        neumann_list = new ArrayList<>(size[sizes.NEUMANN]);
     }
 
     public ArrayList<Node> getNodes(){
@@ -65,7 +73,7 @@ public class Mesh {
     }
 
     public Condition getCondition(int i, int type){
-        if (type == Integer.parseInt(sizes.DIRICHLET.toString())) return dirichlet_list.get(i);
+        if (type == sizes.DIRICHLET) return dirichlet_list.get(i);
         else return neumann_list.get(i);
     }
 }
