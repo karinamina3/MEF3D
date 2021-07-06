@@ -2,7 +2,9 @@ package mef3d;
 
 import classes.Item;
 import mef3d.classes.Condition;
+import mef3d.classes.Element;
 import mef3d.classes.Mesh;
+import mef3d.classes.Node;
 import mef3d.classes.enums.indicators;
 import mef3d.classes.enums.lines;
 import mef3d.classes.enums.modes;
@@ -11,67 +13,76 @@ import mef3d.classes.enums.sizes;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Tools {
 
-    public static void obtenerDatos(File file, int nlines, int n, int mode, ArrayList<Item> item_list) {
-        String line;
+    public static void obtenerDatosCoordenadas(Scanner sc, int n, ArrayList<Node> node_list) {
+        for (int i = 0; i < n; i++){
+            int e;
+            float r, rr, rrr;
 
-        // TODO: research equivalent '>>' operator
+            e = sc.nextInt();
+            r = sc.nextFloat();
+            rr = sc.nextFloat();
+            rrr = sc.nextFloat();
 
-        // file >> line;
-        // if(nlines==DOUBLELINE) file >> line;
+            node_list.get(i).setValues(
+                    e,
+                    r,
+                    rr,
+                    rrr,
+                    indicators.NOTHING,
+                    indicators.NOTHING,
+                    indicators.NOTHING,
+                    indicators.NOTHING,
+                    indicators.NOTHING
+            );
+        }
+    }
 
-        for (int i = 0; i < n; i++) {
-            switch (mode) {
-                case modes.INT_FLOAT:
-                    int e0;
-                    float r0;
-                    // file >> e0 >> r0
-                    item_list.get(i).setValues(
-                            indicators.NOTHING,
-                            indicators.NOTHING,
-                            indicators.NOTHING,
-                            indicators.NOTHING,
-                            e0,
-                            indicators.NOTHING,
-                            indicators.NOTHING,
-                            indicators.NOTHING,
-                            r0
-                    );
-                    break;
-                case modes.INT_FLOAT_FLOAT_FLOAT:
-                    int e;
-                    float r, rr, rrr;
-                    // file >> e >> r >> rr >> rrr;
-                    item_list.get(i).setValues(
-                            e,
-                            r,
-                            rr,
-                            rrr,
-                            indicators.NOTHING,
-                            indicators.NOTHING,
-                            indicators.NOTHING,
-                            indicators.NOTHING,
-                            indicators.NOTHING
-                    );
-                    break;
-                case modes.INT_INT_INT_INT_INT:
-                    int e1, e2, e3, e4, e5;
-                    // file >> e1 >> e2 >> e3 >> e4 >> e5;
-                    item_list.get(i).setValues(
-                            e1,
-                            indicators.NOTHING,
-                            indicators.NOTHING,
-                            indicators.NOTHING,
-                            e2,
-                            e3,
-                            e4,
-                            e5,
-                            indicators.NOTHING
-                    );
-                    break;
-            }
+    public static void obtenerDatosElementos(Scanner sc, int n, ArrayList<Element> element_list) {
+        for (int i = 0; i < n; i++){
+            int e1, e2, e3, e4, e5;
+
+            e1 = sc.nextInt();
+            e2 = sc.nextInt();
+            e3 = sc.nextInt();
+            e4 = sc.nextInt();
+            e5 = sc.nextInt();
+
+            element_list.get(i).setValues(
+                    e1,
+                    indicators.NOTHING,
+                    indicators.NOTHING,
+                    indicators.NOTHING,
+                    e2,
+                    e3,
+                    e4,
+                    e5,
+                    indicators.NOTHING
+            );
+        }
+    }
+    public static void obtenerDatosCondiciones(Scanner sc, int n, ArrayList<Condition> condition_list) {
+        for (int i = 0; i < n; i++){
+            int e0;
+            float r0;
+
+            e0 = sc.nextInt();
+            r0 = sc.nextFloat();
+
+            condition_list.get(i).setValues(
+                    indicators.NOTHING,
+                    indicators.NOTHING,
+                    indicators.NOTHING,
+                    indicators.NOTHING,
+                    e0,
+                    indicators.NOTHING,
+                    indicators.NOTHING,
+                    indicators.NOTHING,
+                    r0
+            );
         }
     }
 
@@ -94,29 +105,33 @@ public class Tools {
     }
 
     public static void leerMallayCondiciones(Mesh m, String filename) throws IOException {
-        String inputFileName = addExtension(filename, ".dat");;
+        String inputFileName = addExtension(filename, ".dat");
 
         float k, Q;
 
         int nnodes, neltos, ndirich, nneu;
 
-        FileReader file = new FileReader(inputFileName);
+        File archivo = new File(inputFileName);
+        Scanner sc = new Scanner(archivo);
 
-        //file >> k >> Q;
-        //cout << "k y Q: "<<k<<" y "<<Q<<"\n";
-        //file >> nnodes >> neltos >> ndirich >> nneu;
-        //cout << "sizes: "<<nnodes<<" y "<<neltos<<" y "<<ndirich<<" y "<<nneu<<"\n";
+        k = sc.nextFloat();
+        Q = sc.nextFloat();
+
+        nnodes = sc.nextInt();
+        neltos = sc.nextInt();
+        ndirich = sc.nextInt();
+        nneu = sc.nextInt();
 
         m.setParameters(k, Q);
         m.setSizes(nnodes,neltos,ndirich,nneu);
         m.createData();
 
-        obtenerDatos(file, lines.SINGLELINE,nnodes, modes.INT_FLOAT_FLOAT_FLOAT,m.getNodes());
-        obtenerDatos(file,lines.DOUBLELINE,neltos,modes.INT_INT_INT_INT_INT,m.getElements());
-        obtenerDatos(file,lines.DOUBLELINE,ndirich,modes.INT_FLOAT,m.getDirichlet());
-        obtenerDatos(file,lines.DOUBLELINE,nneu,modes.INT_FLOAT,m.getNeumann());
+        obtenerDatosCoordenadas(sc, nnodes, m.getNodes());
+        obtenerDatosElementos(sc,neltos, m.getElements());
+        obtenerDatosCondiciones(sc,ndirich, m.getDirichlet());
+        obtenerDatosCondiciones(sc,nneu, m.getNeumann());
 
-        file.close();
+        sc.close();
         //Se corrigen los índices en base a las filas que serán eliminadas
         //luego de aplicar las condiciones de Dirichlet
         correctConditions(ndirich,m.getDirichlet(),m.getDirichletIndices());
@@ -136,10 +151,11 @@ public class Tools {
         ArrayList<Integer> dirich_indices = m.getDirichletIndices();
         ArrayList<Condition> dirich = m.getDirichlet();
 
-        FileReader file = new FileReader(outputFileName);
+        FileWriter file = new FileWriter(outputFileName);
+        BufferedWriter out = new BufferedWriter(file);
 
-        // file << "GiD Post Results File 1.0\n";
-        // file << "Result \"Temperature\" \"Load Case 1\" 1 Scalar OnNodes\nComponentNames \"T\"\nValues\n";
+        out.write("GiD Post Results File 1.0\n");
+        out.write("Result \"Temperature\" \"Load Case 1\" 1 Scalar OnNodes\nComponentNames \"T\"\nValues\n");
 
         int Tpos = 0;
         int Dpos = 0;
@@ -148,16 +164,15 @@ public class Tools {
 
         for (int i = 0; i < n; i++){
             if (findIndex(i+1, nd, dirich_indices)){
-                // file << i+1 << " " << dirich[Dpos].getValue() << "\n";
+                out.write("" + i+1 + " " + dirich.get(Dpos).getValue() + "\n");
                 Dpos++;
             } else {
-                // file << i+1 << " " << T.at(Tpos) << "\n";
+                out.write("" + i+1 + " " + T.get(Tpos) + "\n");
                 Tpos++;
             }
         }
 
-        // file << "End values\n";
-
+        out.write("End values");
         file.close();
     }
 }
