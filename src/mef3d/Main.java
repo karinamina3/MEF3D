@@ -10,11 +10,13 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 
+        // Si en los args no viene el nombre del archivo del .dat se sale del programa
         if (args.length == 0) {
             System.exit(0);
         }
 
         String filename = args[0];
+        // inicializaciones variables requeridas
         ArrayList<ArrayList<ArrayList<Float>>> localKs = new ArrayList<ArrayList<ArrayList<Float>>>();
         ArrayList<ArrayList<Float>> localbs = new ArrayList<ArrayList<Float>>();
         ArrayList<ArrayList<Float>> K = new ArrayList<ArrayList<Float>>();
@@ -30,10 +32,10 @@ public class Main {
         System.out.print("*********************************************************************************\n\n");
 
         Mesh m = new Mesh();
-        Tools.leerMallayCondiciones(m, filename);
+        Tools.leerMallayCondiciones(m, filename); // leemos del archivo .dat todos los datos sobre condiciones, elementos.
         System.out.print("Datos obtenidos correctamente\n********************\n");
 
-        SEL.crearSistemasLocales(m, localKs, localbs);
+        SEL.crearSistemasLocales(m, localKs, localbs); // creamos sistema local
 
         SEL.showKs(new ArrayList<ArrayList<ArrayList<Float>>>(localKs));
         SEL.showbs(new ArrayList<ArrayList<Float>>(localbs));
@@ -42,6 +44,7 @@ public class Main {
         MathTools.zeroesAux(K, m.getSize(sizes.NODES));
         MathTools.zeroes(b, m.getSize(sizes.NODES));
 
+        // proceso de ensamblaje
         SEL.ensamblaje(m, localKs, localbs, K, b);
         SEL.showMatrix(new ArrayList<ArrayList<Float>>(K));
         SEL.showVector(new ArrayList<Float>(b));
@@ -78,6 +81,7 @@ public class Main {
         MathTools.zeroes(T, b.size());
         SEL.calculate(K, b, T);
 
+        // resultados
         System.out.print("La respuesta es: \n");
         SEL.showVector(new ArrayList<Float>(T));
 

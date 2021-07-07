@@ -339,8 +339,8 @@ public class SEL {
         MathTools.zeroesAux(K, 30);
 
         for(int i = 0; i < 30;i++){
-            for(int j = 0; i < 30; j++){
-                K.get(i).set(j, (183f*J*MatrixU.get(i).get(j)));
+            for(int j = 0; j < 30; j++){
+                K.get(i).set(j, (183f * J * MatrixU.get(i).get(j)));
                 K.get(10+i).set(j+10, (183f*J*MatrixU.get(i).get(j)));
                 K.get(20+i).set(j+20, (183f*J*MatrixU.get(i).get(j)));
             }

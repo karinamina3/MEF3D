@@ -16,9 +16,11 @@ public class Mesh {
     ArrayList<Condition> dirichlet_list;
     ArrayList<Condition> neumann_list;
 
-    public void setParameters(float k, float Q){
+    public void setParameters(float k, float[] Q){
         parameter[parameters.THERMAL_CONDUCTIVITY] = k;
-        parameter[parameters.HEAT_SOURCE] = Q;
+        parameter[1] = Q[0];
+        parameter[2] = Q[1];
+        parameter[3] = Q[2];
     }
 
     public void setSizes(int nnodes, int neltos,int ndirich,int nneu) {

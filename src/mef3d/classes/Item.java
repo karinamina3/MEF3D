@@ -1,4 +1,4 @@
-package classes;
+package mef3d.classes;
 
 public class Item {
 
@@ -90,13 +90,21 @@ public class Item {
         this.value = value;
     }
 
-    public int getNode5() { return node5; }
+    public int getNode5() {
+        return node5;
+    }
 
-    public void setNode5(int node5) { this.node5 = node5; }
+    public void setNode5(int node5) {
+        this.node5 = node5;
+    }
 
-    public int getNode6() { return node6;}
+    public int getNode6() {
+        return node6;
+    }
 
-    public void setNode6(int node6) { this.node6 = node6; }
+    public void setNode6(int node6) {
+        this.node6 = node6;
+    }
 
     public int getNode7() {
         return node7;
@@ -131,8 +139,8 @@ public class Item {
     }
 
     // TODO: equivalent of virtual functions in Java
-    public void setValues(int a,float b,float c,float d,int e,int f,int g, int h, float i){
+    public void setValues(int a, float b, float c, float d, int e, int f, int g, int h, int i, int j, int k, int l, int m, int n, float o) {
 
-    };
+    }
 
 }

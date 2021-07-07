@@ -1,6 +1,6 @@
 package mef3d;
 
-import classes.Item;
+import mef3d.classes.Item;
 import mef3d.classes.Condition;
 import mef3d.classes.Element;
 import mef3d.classes.Mesh;
@@ -37,7 +37,14 @@ public class Tools {
                     indicators.NOTHING,
                     indicators.NOTHING,
                     indicators.NOTHING,
-                    indicators.NOTHING);
+                    indicators.NOTHING,
+                    indicators.NOTHING,
+                    indicators.NOTHING,
+                    indicators.NOTHING,
+                    indicators.NOTHING,
+                    indicators.NOTHING,
+                    indicators.NOTHING
+                    );
 
             node_list.add(node);
         }
@@ -46,23 +53,35 @@ public class Tools {
     public static void obtenerDatosElementos(Scanner sc, int n, ArrayList<Element> element_list) {
         for (int i = 0; i < n; i++) {
             Element el = new Element();
-            int e1, e2, e3, e4, e5;
+            int eId, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10;
 
+            eId = sc.nextInt();
             e1 = sc.nextInt();
             e2 = sc.nextInt();
             e3 = sc.nextInt();
             e4 = sc.nextInt();
-            e5 = sc.nextInt();
+//            e5 = sc.nextInt();
+//            e6 = sc.nextInt();
+//            e7 = sc.nextInt();
+//            e8 = sc.nextInt();
+//            e9 = sc.nextInt();
+//            e10 = sc.nextInt();
 
             el.setValues(
+                    eId,
+                    indicators.NOTHING,
+                    indicators.NOTHING,
+                    indicators.NOTHING,
                     e1,
-                    indicators.NOTHING,
-                    indicators.NOTHING,
-                    indicators.NOTHING,
                     e2,
                     e3,
                     e4,
-                    e5,
+                    indicators.NOTHING,
+                    indicators.NOTHING,
+                    indicators.NOTHING,
+                    indicators.NOTHING,
+                    indicators.NOTHING,
+                    indicators.NOTHING,
                     indicators.NOTHING
             );
 
@@ -85,6 +104,12 @@ public class Tools {
                     indicators.NOTHING,
                     indicators.NOTHING,
                     e0,
+                    indicators.NOTHING,
+                    indicators.NOTHING,
+                    indicators.NOTHING,
+                    indicators.NOTHING,
+                    indicators.NOTHING,
+                    indicators.NOTHING,
                     indicators.NOTHING,
                     indicators.NOTHING,
                     indicators.NOTHING,
@@ -116,27 +141,37 @@ public class Tools {
     public static void leerMallayCondiciones(Mesh m, String filename) throws IOException {
         String inputFileName = addExtension(filename, ".dat");
 
-        float k, Q;
+        float Ei, xF, yF, zF;
 
-        int nnodes, neltos, ndirich, nneu;
+        int nnodes, neltos, nneu;
+
+        int nDx, nDy, nDz, ndirich;
 
         File archivo = new File(inputFileName);
         Scanner sc = new Scanner(archivo);
 
-        k = sc.nextFloat();
-        Q = sc.nextFloat();
+        Ei = sc.nextFloat();
+        xF = sc.nextFloat();
+        yF = sc.nextFloat();
+        zF = sc.nextFloat();
+
+        float[] listF = new float[3];
+        listF[0] = xF;
+        listF[1] = yF;
+        listF[2] = zF;
 
         nnodes = sc.nextInt();
         neltos = sc.nextInt();
-        ndirich = sc.nextInt();
+
+        nDx = sc.nextInt();
+        nDy = sc.nextInt();
+        nDz = sc.nextInt();
+
+        ndirich = nDx + nDy + nDz;
+
         nneu = sc.nextInt();
 
-        System.out.println(nnodes);
-        System.out.println(neltos);
-        System.out.println(ndirich);
-        System.out.println(nneu);
-
-        m.setParameters(k, Q);
+        m.setParameters(Ei, listF);
         m.setSizes(nnodes, neltos, ndirich, nneu);
         m.createData();
 
@@ -154,7 +189,19 @@ public class Tools {
         sc.nextLine();
         sc.next();
 
-        obtenerDatosCondiciones(sc, ndirich, m.getDirichlet());
+        obtenerDatosCondiciones(sc, nDx, m.getDirichlet());
+
+        sc.next();
+        sc.nextLine();
+        sc.next();
+
+        obtenerDatosCondiciones(sc, nDy, m.getDirichlet());
+
+        sc.next();
+        sc.nextLine();
+        sc.next();
+
+        obtenerDatosCondiciones(sc, nDz, m.getDirichlet());
 
         sc.next();
         sc.nextLine();
