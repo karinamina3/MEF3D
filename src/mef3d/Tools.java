@@ -183,10 +183,9 @@ public class Tools {
         ArrayList<Condition> dirich = m.getDirichlet();
 
         FileWriter file = new FileWriter(outputFileName);
-        BufferedWriter out = new BufferedWriter(file);
 
-        out.write("GiD Post Results File 1.0\n");
-        out.write("Result \"Temperature\" \"Load Case 1\" 1 Scalar OnNodes\nComponentNames \"T\"\nValues\n");
+        file.write("GiD Post Results File 1.0\n");
+        file.write("Result \"Temperature\" \"Load Case 1\" 1 Scalar OnNodes\nComponentNames \"T\"\nValues\n");
 
         int Tpos = 0;
         int Dpos = 0;
@@ -195,15 +194,15 @@ public class Tools {
 
         for (int i = 0; i < n; i++) {
             if (findIndex(i + 1, nd, dirich_indices)) {
-                out.write("" + i + 1 + " " + dirich.get(Dpos).getValue() + "\n");
+                file.write("" + i + 1 + " " + dirich.get(Dpos).getValue() + "\n");
                 Dpos++;
             } else {
-                out.write("" + i + 1 + " " + T.get(Tpos) + "\n");
+                file.write("" + i + 1 + " " + T.get(Tpos) + "\n");
                 Tpos++;
             }
         }
 
-        out.write("End values");
+        file.write("End values");
         file.close();
     }
 }

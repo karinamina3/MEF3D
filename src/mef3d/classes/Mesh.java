@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class Mesh {
 
-    float parameter [] = new float[2] ;
+    float parameter [] = new float[6] ;
     int size [] = new int[4];
 
     ArrayList<Node> node_list;

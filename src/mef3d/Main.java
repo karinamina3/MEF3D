@@ -21,8 +21,8 @@ public class Main {
         ArrayList<Float> b = new ArrayList<Float>();
         ArrayList<Float> T = new ArrayList<Float>();
 
-        System.out.print("IMPLEMENTACION DEL METODO DE LOS ELEMENTOS FINITOS\n");
-        System.out.print("\t- TRANSFERENCIA DE CALOR\n");
+        System.out.print("IMPLEMENTACION DEL METODO DE LOS ELEMENTOS FINITOS EN 3D\n");
+        System.out.print("\t- ALEXA SHMALEXA\n");
         System.out.print("\t- 3 DIMENSIONES\n");
         System.out.print("\t- FUNCIONES DE FORMA LINEALES\n");
         System.out.print("\t- PESOS DE GALERKIN\n");
@@ -40,8 +40,8 @@ public class Main {
         System.out.print("******************************\n");
 
         MathTools.zeroesAux(K, m.getSize(sizes.NODES));
-
         MathTools.zeroes(b, m.getSize(sizes.NODES));
+
         SEL.ensamblaje(m, localKs, localbs, K, b);
         SEL.showMatrix(new ArrayList<ArrayList<Float>>(K));
         SEL.showVector(new ArrayList<Float>(b));
